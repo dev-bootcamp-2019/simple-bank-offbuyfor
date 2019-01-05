@@ -59,8 +59,10 @@ contract SimpleBank {
     /// @return The users enrolled status
     // Emit the appropriate event
     function enroll() public returns (bool){
-        enrolled[msg.sender] = true;
+          require(enrolled[msg.sender]!=true, "sender already enrolled");
+          enrolled[msg.sender] = true;
         balances[msg.sender] = 0;
+        emit LogEnrolled (msg.sender);
         return true;
     }
 
@@ -91,7 +93,6 @@ contract SimpleBank {
            require(enrolled[msg.sender], "sender is not enrolled");
         require(balances[msg.sender] >= withdrawAmount, "Insufficient Funds");
         balances[msg.sender] -= withdrawAmount;
-        msg.sender.transfer(withdrawAmount);
         emit LogWithdrawal(msg.sender, withdrawAmount, balances[msg.sender]);
         return balances[msg.sender];
     }
